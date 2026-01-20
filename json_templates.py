@@ -154,7 +154,7 @@ def get_origin_json():
     }
 }
 
-def get_mate_json(featureId1, featureId2):
+def get_mate_json(featureId1, featureId2, type):
     return {
     "feature": {
         "btType": "BTMMate-64",
@@ -169,7 +169,7 @@ def get_mate_json(featureId1, featureId2):
             "btType": "BTMParameterEnum-145",
             "namespace": "",
             "enumName": "Mate type",
-            "value": "FASTENED",
+            "value": type,
             "parameterId": "mateType"
             },
             {

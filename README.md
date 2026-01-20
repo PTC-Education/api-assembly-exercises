@@ -1,5 +1,6 @@
 # api-assembly-exercises
 
+## Code Flow
 * Sketch a circle
 * Get the sketch's feature ID
 * Extrude the circle
@@ -11,6 +12,7 @@
 * Add Mate Connector to Origin
 * Create Fastened mate
 
+## File Structure
 ```
 api-assembly-exercises/
 ├── main.py              # Your main script\
