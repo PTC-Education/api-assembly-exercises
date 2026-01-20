@@ -58,16 +58,21 @@ def main():
         # Create new mate connector on part
         mc_response = add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_connector_json)
         mc_id = mc_response.json()['feature']['featureId']
+        print(f"New mate connector ID: {mc_id}")
 
         # Generate JSON for new mate connector at origin
         origin_json = get_origin_json()
+
+        # Create new mate connector at origin
         origin_response = add_feature_to_assembly(DID, WVM, WVMID, assemEID, origin_json)
+        mc_origin_id = origin_response.json()['feature']['featureId']
+        print(f"New mate connector at origin ID: {mc_origin_id}")
 
         # Generate JSON for new mate
-        #mate_json = get_mate_json(mc_id, origin_id)
+        mate_json = get_mate_json(mc_id, mc_origin_id)
 
         # Create new fastened mate in assembly
-        #add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_json)
+        add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_json)
 
     except Exception as e:
         print("Error:", e)
