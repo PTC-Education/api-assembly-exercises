@@ -37,7 +37,7 @@ def get_sketch_json(radius, x, y, name):
   }
 }
 
-def get_extrude_json(feature_id):
+def get_extrude_json(feature_id, depth):
     return {
           "btType": "BTFeatureDefinitionCall-1406",
           "feature": {
@@ -75,7 +75,7 @@ def get_extrude_json(feature_id):
               },
               {
                 "btType": "BTMParameterQuantity-147",
-                "expression": "1 in",
+                "expression": str(depth) + " m",
                 "parameterId": "depth"
               }
                 ],
@@ -154,7 +154,7 @@ def get_origin_json():
     }
 }
 
-def get_mate_json(featureId1, featureId2, type):
+def get_mate_json(featureId1, featureId2, type, reorient):
     return {
     "feature": {
         "btType": "BTMMate-64",
@@ -171,6 +171,14 @@ def get_mate_json(featureId1, featureId2, type):
             "enumName": "Mate type",
             "value": type,
             "parameterId": "mateType"
+            },
+            {
+              "btType": "BTMParameterBoolean-144",
+              "value": reorient,
+              "nodeId": "8tlsPz/G1alBQ0HRcVTe7rMf",
+              "parameterId": "primaryAxisAlignment",
+              "parameterName": "",
+              "libraryRelationType": "NONE"
             },
             {
             "btType": "BTMParameterQueryWithOccurrenceList-67",

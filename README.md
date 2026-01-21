@@ -11,6 +11,11 @@
 * Add Mate Connector to face
 * Add Mate Connector to Origin
 * Create Fastened mate
+* Get element and part ID for existing part
+* Add existing part to assembly
+* Get the face ID for the part's bottom face
+* Add Mate Connector to face
+* Create Revolute mate
 
 ## File Structure
 ```

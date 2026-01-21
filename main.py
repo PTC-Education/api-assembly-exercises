@@ -1,5 +1,5 @@
 # Import necessary functions
-from helper_functions import get_ids
+from helper_functions import *
 from json_templates import *
 from api_calls import *
 import json
@@ -8,12 +8,10 @@ def main():
     try:
         # Grab DID, EID, and WVMID from Part Studio URL
         part_studio_URL = "https://cad.onshape.com/documents/0af072a8e59166eb73f43a08/w/f3e2c6a9c7361be87245370d/e/39b8de68e0b8abef3cdb7967" # Change this
-        existing_part_URL = "https://cad.onshape.com/documents/0af072a8e59166eb73f43a08/w/f3e2c6a9c7361be87245370d/e/5e67e8dd650c16db400c9eb3"
         WVM = "w"
         DID, EID, WVMID = get_ids(part_studio_URL, WVM)
-        existingDID, existingEID, existingWVMID = get_ids(existing_part_URL, WVM)
 
-        # Generate JSON for circle sketch
+        # Generate JSON for circle sketch on Front plane
         sketch_json = get_sketch_json(radius=0.035, x=0.05, y=0.05, name="Circle Sketch")
 
         # Create circle sketch
@@ -24,7 +22,7 @@ def main():
         print(f"New sketch ID: {feature_id}")
 
         # Generate extrusion JSON
-        extrude_json = get_extrude_json(feature_id)
+        extrude_json = get_extrude_json(feature_id, depth=0.025)
 
         # Create extrusion
         add_feature_to_partstudio(DID, WVM, WVMID, EID, extrude_json)
@@ -42,20 +40,16 @@ def main():
         # Add part to assembly    
         add_part_to_assembly(DID, WVM, WVMID, assemEID, EID, partId)
         assembly_definition = get_assembly_definition(DID, WVM, WVMID, assemEID)
-        deterministicId = assembly_definition.json()['rootAssembly']['occurrences'][0]['path'][0]
-        print(f"New assembly path ID: {deterministicId}")
+        deterministicId1 = get_deterministic_id(assembly_definition, partId)
+        print(f"New assembly path ID: {deterministicId1}")
 
-        # Get the body details of the new part
+        # Get the body details of the new part then find the top face
         body_details = get_body_details(DID, WVM, WVMID, EID, partId)
-        bodies = body_details.json()['bodies']
-        for face in bodies[0]['faces']:
-            origin = face['surface']['origin']
-            if origin['y'] == 0:
-                faceId = face['id']
+        faceId = get_face_id(body_details, 'y')
         print(f"New part face ID: {faceId}")
 
         # Generate JSON for new mate connector
-        mate_connector_json = get_mate_connector_json(deterministicId, faceId)
+        mate_connector_json = get_mate_connector_json(deterministicId1, faceId)
 
         # Create new mate connector on part
         mc_response = add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_connector_json)
@@ -71,12 +65,13 @@ def main():
         print(f"New mate connector at origin ID: {mc_origin_id}")
 
         # Generate JSON for new fastened mate
-        mate_json = get_mate_json(mc_id, mc_origin_id, "FASTENED")
+        mate_json = get_mate_json(mc_id, mc_origin_id, "FASTENED", False)
 
         # Create new fastened mate in assembly
         add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_json)
 
         # Get part ID from existing part
+        existingEID = get_existing_eid(DID, WVM, WVMID, 'Existing Part')
         parts_response = get_parts_list(DID, WVM, WVMID, existingEID)
         existing_partId = parts_response.json()[-1]['partId']
         print(f"Existing part ID: {existing_partId}")
@@ -84,28 +79,24 @@ def main():
         # Add part to assembly    
         add_part_to_assembly(DID, WVM, WVMID, assemEID, existingEID, existing_partId)
         assembly_definition = get_assembly_definition(DID, WVM, WVMID, assemEID)
-        deterministicId = assembly_definition.json()['rootAssembly']['occurrences'][1]['path'][0]
-        print(f"New assembly path ID: {deterministicId}")
+        deterministicId2 = get_deterministic_id(assembly_definition, existing_partId)
+        print(f"New assembly path ID: {deterministicId2}")
 
         # Get the body details of the new part
         body_details = get_body_details(DID, WVM, WVMID, existingEID, existing_partId)
-        bodies = body_details.json()['bodies']
-        for face in bodies[0]['faces']:
-            origin = face['surface']['origin']
-            if origin['y'] == 0:
-                faceId = face['id']
+        faceId = get_face_id(body_details, 'z')
         print(f"New part face ID: {faceId}")
 
         # Generate JSON for new mate connector
-        mate_connector_json = get_mate_connector_json(deterministicId, faceId)
+        mate_connector_json = get_mate_connector_json(deterministicId2, faceId)
 
         # Create new mate connector on part
         mc_response = add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_connector_json)
-        mc_id = mc_response.json()['feature']['featureId']
-        print(f"New mate connector ID: {mc_id}")
+        mc_id2 = mc_response.json()['feature']['featureId']
+        print(f"New mate connector ID: {mc_id2}")
 
         # Generate JSON for new revolute mate
-        mate_json = get_mate_json(mc_id, mc_origin_id, "REVOLUTE")
+        mate_json = get_mate_json(mc_id, mc_id2, "REVOLUTE", True)
 
         # Create new revolute mate in assembly
         add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_json)
@@ -115,6 +106,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# TO DO: 
-# Flip the mate

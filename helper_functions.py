@@ -8,3 +8,18 @@ def get_ids(url, wv):
     WVID = urlArr[wvIndex + 1]
 
     return DID, EID, WVID
+
+def get_deterministic_id(definition, partId):
+    json = definition.json()
+    for instance in json['rootAssembly']['instances']:
+            if instance['partId'] == partId:
+                deterministicId = instance['id']
+    return deterministicId    
+
+def get_face_id(body_details, axis):
+    bodies = body_details.json()['bodies']
+    for face in bodies[0]['faces']:
+        origin = face['surface']['origin']
+        if origin[axis] == 0:
+            faceId = face['id']
+    return faceId

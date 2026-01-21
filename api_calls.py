@@ -63,3 +63,12 @@ def get_body_details(DID, WVM, WVMID, EID, partId):
     URL = baseURL + apiURL
     response = requests.get(URL, auth=api_keys, headers=headers)
     return response
+
+def get_existing_eid(DID, WVM, WVMID, element_name):
+    apiURL = "documents/d/{}/{}/{}/elements".format(DID, WVM, WVMID)
+    URL = baseURL + apiURL
+    response = requests.get(URL, auth=api_keys, headers=headers)
+    for element in response.json():
+        if element['name'] == element_name:
+            existingEID = element['id']
+    return existingEID
