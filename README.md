@@ -1,6 +1,11 @@
 # api-assembly-exercises
 
 ## Code Flow
+
+These steps are executed sequentially in main.py.  Just run
+
+`python3 main.py`
+
 * Sketch a circle
 * Get the sketch's feature ID
 * Extrude the circle
@@ -20,7 +25,7 @@
 ## File Structure
 ```
 api-assembly-exercises/
-├── main.py              # Your main script\
+├── main.py              # Main script
 ├── APIKey.json          # Your Onshape API Keys.  Don't share!
 ├── api_calls.py         # API functions (GET, POST, etc.)
 ├── json_templates.py    # Functions that return JSON structures
