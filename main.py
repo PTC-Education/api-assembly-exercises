@@ -84,7 +84,7 @@ def main():
 
         # Get the body details of the new part
         body_details = get_body_details(DID, WVM, WVMID, existingEID, existing_partId)
-        faceId = get_face_id(body_details, 'x', 0.012)
+        faceId = get_face_id(body_details, 'x', 0.0)
         print(f"New part face ID: {faceId}")
 
         # Generate JSON for new mate connector
