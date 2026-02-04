@@ -12,7 +12,7 @@ def main():
         DID, EID, WVMID = get_ids(part_studio_URL, WVM)
 
         # Generate JSON for circle sketch on Front plane
-        sketch_json = get_sketch_json(radius=0.035, x=0.05, y=0.05, name="Circle Sketch")
+        sketch_json = get_sketch_json(radius=0.005, x=0.05, y=0.05, name="Circle Sketch")
 
         # Create circle sketch
         response = add_feature_to_partstudio(DID, WVM, WVMID, EID, sketch_json)
@@ -22,7 +22,7 @@ def main():
         print(f"New sketch ID: {feature_id}")
 
         # Generate extrusion JSON
-        extrude_json = get_extrude_json(feature_id, depth=0.025)
+        extrude_json = get_extrude_json(feature_id, depth=0.040)
 
         # Create extrusion
         add_feature_to_partstudio(DID, WVM, WVMID, EID, extrude_json)
@@ -45,7 +45,7 @@ def main():
 
         # Get the body details of the new part then find the top face
         body_details = get_body_details(DID, WVM, WVMID, EID, partId)
-        faceId = get_face_id(body_details, 'y')
+        faceId = get_face_id(body_details, 'y', 0.0)
         print(f"New part face ID: {faceId}")
 
         # Generate JSON for new mate connector
@@ -71,7 +71,7 @@ def main():
         add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_json)
 
         # Get part ID from existing part
-        existingEID = get_existing_eid(DID, WVM, WVMID, 'Existing Part')
+        existingEID = get_existing_eid(DID, WVM, WVMID)
         parts_response = get_parts_list(DID, WVM, WVMID, existingEID)
         existing_partId = parts_response.json()[-1]['partId']
         print(f"Existing part ID: {existing_partId}")
@@ -84,7 +84,7 @@ def main():
 
         # Get the body details of the new part
         body_details = get_body_details(DID, WVM, WVMID, existingEID, existing_partId)
-        faceId = get_face_id(body_details, 'z')
+        faceId = get_face_id(body_details, 'x', 0.012)
         print(f"New part face ID: {faceId}")
 
         # Generate JSON for new mate connector
@@ -96,7 +96,7 @@ def main():
         print(f"New mate connector ID: {mc_id2}")
 
         # Generate JSON for new revolute mate
-        mate_json = get_mate_json(mc_id, mc_id2, "REVOLUTE", True)
+        mate_json = get_mate_json(mc_id, mc_id2, "REVOLUTE", False)
 
         # Create new revolute mate in assembly
         add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_json)
