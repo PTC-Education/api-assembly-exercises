@@ -64,11 +64,13 @@ def get_body_details(DID, WVM, WVMID, EID, partId):
     response = requests.get(URL, auth=api_keys, headers=headers)
     return response
 
-def get_existing_eid(DID, WVM, WVMID, element_name):
+def get_existing_eid(DID, WVM, WVMID):
     apiURL = "documents/d/{}/{}/{}/elements".format(DID, WVM, WVMID)
     URL = baseURL + apiURL
     response = requests.get(URL, auth=api_keys, headers=headers)
     for element in response.json():
-        if element['name'] == element_name:
-            existingEID = element['id']
-    return existingEID
+        if element['name'] != "Part Studio 1" and element['elementType'].lower() == "partstudio":
+            return element['id']
+    
+    # If no matching element found
+    raise ValueError("No extra Part Studio Found")
