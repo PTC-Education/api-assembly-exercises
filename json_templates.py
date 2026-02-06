@@ -21,16 +21,30 @@ def get_sketch_json(radius, x, y, name):
         "btType": "BTMSketchCurve-4",
         "geometry": {
           "btType": "BTCurveGeometryCircle-115",
-          "radius": radius,  
+          "radius": radius*2,  
           "xCenter": x,
           "yCenter": y,  
           "xDir": 1,
           "yDir": 0, 
           "clockwise": False 
         },
-        "centerId": "circle-entity.center",
-        "entityId": "circle-entity"
-      }  
+        "centerId": "big-circle.center",
+        "entityId": "big-circle"
+      },
+      {
+        "btType": "BTMSketchCurve-4",
+        "geometry": {
+          "btType": "BTCurveGeometryCircle-115",
+          "radius": radius,  
+          "xCenter": x+.001,
+          "yCenter": y,  
+          "xDir": 1,
+          "yDir": 0, 
+          "clockwise": False 
+        },
+        "centerId": "small-circle.center",
+        "entityId": "small-circle"
+      }    
     ],
     "constraints": [      
     ]
@@ -61,8 +75,8 @@ def get_extrude_json(feature_id, depth):
                 "btType": "BTMParameterQueryList-148",
                 "queries": [
                   {
-                    "btType": "BTMIndividualSketchRegionQuery-140",
-                    "featureId": feature_id
+                    "btType": "BTMIndividualQuery-138",
+                    "queryString": f'query=qNthElement(qSketchRegion(makeId("{feature_id}"), false), 0);'
                   }
                 ],
                 "parameterId": "entities"
