@@ -51,7 +51,7 @@ def get_sketch_json(radius, x, y, name):
   }
 }
 
-def get_extrude_json(feature_id, depth):
+def get_extrude_json(feature_id, depth, region_index):
     return {
           "btType": "BTFeatureDefinitionCall-1406",
           "feature": {
@@ -76,7 +76,7 @@ def get_extrude_json(feature_id, depth):
                 "queries": [
                   {
                     "btType": "BTMIndividualQuery-138",
-                    "queryString": f'query=qNthElement(qSketchRegion(makeId("{feature_id}"), false), 0);'
+                    "queryString": f'query=qNthElement(qSketchRegion(makeId("{feature_id}"), false), {region_index});'
                   }
                 ],
                 "parameterId": "entities"
@@ -106,28 +106,38 @@ def get_mate_connector_json(instanceID, deterministicId):
             "name": "Mate connector 1",
             "parameters": [
                 {
-                "btType": "BTMParameterEnum-145",
-                "enumName": "Origin type",
-                "value": "ON_ENTITY",
-                "parameterId": "originType"
+                  "btType": "BTMParameterEnum-145",
+                  "enumName": "Origin type",
+                  "value": "ON_ENTITY",
+                  "parameterId": "originType"
                 },
                 {
-                "btType": "BTMParameterQueryWithOccurrenceList-67",
-                "queries": [
-                    {
-                    "btType": "BTMInferenceQueryWithOccurrence-1083",
-                    "inferenceType": "CENTROID",
-                    "path": [
-                        instanceID
-                    ],
-                    "deterministicIds": [
-                        deterministicId
-                    ]
-                    }
-                ],
-                "parameterId": "originQuery",
-                "parameterName": "",
-                "libraryRelationType": "NONE"
+                  "btType": "BTMParameterQueryWithOccurrenceList-67",
+                  "queries": [
+                      {
+                      "btType": "BTMInferenceQueryWithOccurrence-1083",
+                      "inferenceType": "CENTROID",
+                      "path": [
+                          instanceID
+                      ],
+                      "deterministicIds": [
+                          deterministicId
+                      ]
+                      }
+                  ],
+                  "parameterId": "originQuery",
+                  "parameterName": "",
+                  "libraryRelationType": "NONE"
+                },
+                {
+                    "btType": "BTMParameterBoolean-144",
+                    "value": True,
+                    "parameterId": "transform"
+                },
+                {
+                  "btType": "BTMParameterQuantity-147",
+                  "expression": "0.01 m",
+                  "parameterId": "translationX"
                 }
             ],
             "isHidden": False,
