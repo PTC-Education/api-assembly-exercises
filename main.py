@@ -10,6 +10,8 @@ def main():
         part_studio_URL = "https://cad.onshape.com/documents/0af072a8e59166eb73f43a08/w/9488cf7048fca2b0c3be8189/e/39b8de68e0b8abef3cdb7967" # Change this
         WVM = "w"
         DID, EID, WVMID = get_ids(part_studio_URL, WVM)
+        
+        # Globals
         XOFFSET = 0.01
         R1 = 0.005
         R2 = 0.02
@@ -34,8 +36,6 @@ def main():
         # Get parts list and partId for two most recent parts
         parts_response = get_parts_list(DID, WVM, WVMID, EID)
         recent_parts = parts_response.json()[-2:]
-        # # partId = parts_response.json()[-1]['partId']
-        # # print(f"New part ID: {partId}")
 
         # Create new assembly
         assem_response = create_assembly(DID, WVM, WVMID, "My Assembly")
