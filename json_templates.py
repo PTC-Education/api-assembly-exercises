@@ -1,4 +1,4 @@
-def get_sketch_json(radius, x, y, name):
+def get_sketch_json(r1, r2, xOffset, yOffset, name):
     return {
   "feature" : {
     "btType": "BTMSketch-151", 
@@ -21,9 +21,9 @@ def get_sketch_json(radius, x, y, name):
         "btType": "BTMSketchCurve-4",
         "geometry": {
           "btType": "BTCurveGeometryCircle-115",
-          "radius": radius*2,  
-          "xCenter": x,
-          "yCenter": y,  
+          "radius": r1,  
+          "xCenter": 0,
+          "yCenter": 0,  
           "xDir": 1,
           "yDir": 0, 
           "clockwise": False 
@@ -35,9 +35,9 @@ def get_sketch_json(radius, x, y, name):
         "btType": "BTMSketchCurve-4",
         "geometry": {
           "btType": "BTCurveGeometryCircle-115",
-          "radius": radius,  
-          "xCenter": x+.001,
-          "yCenter": y,  
+          "radius": r2,  
+          "xCenter": xOffset,
+          "yCenter": yOffset,  
           "xDir": 1,
           "yDir": 0, 
           "clockwise": False 
@@ -89,7 +89,7 @@ def get_extrude_json(feature_id, depth, region_index):
               },
               {
                 "btType": "BTMParameterQuantity-147",
-                "expression": str(depth) + " m",
+                "expression": f"{depth} m",
                 "parameterId": "depth"
               }
                 ],
@@ -98,7 +98,7 @@ def get_extrude_json(feature_id, depth, region_index):
           }
         }
 
-def get_mate_connector_json(instanceID, deterministicId):
+def get_mate_connector_json(instanceID, deterministicId, xOffset):
     return {
         "feature": {    
             "btType": "BTMMateConnector-66",
@@ -136,7 +136,7 @@ def get_mate_connector_json(instanceID, deterministicId):
                 },
                 {
                   "btType": "BTMParameterQuantity-147",
-                  "expression": "0.01 m",
+                  "expression": f"{xOffset} m",
                   "parameterId": "translationX"
                 }
             ],
