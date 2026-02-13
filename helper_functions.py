@@ -11,12 +11,12 @@ def get_ids(url, wv):
 
     return DID, EID, WVID
 
-def get_deterministic_id(definition, partId):
+def get_instance_id(definition, partId):
     json = definition.json()
     for instance in json['rootAssembly']['instances']:
             if instance['partId'] == partId:
-                deterministicId = instance['id']
-    return deterministicId    
+                instanceId = instance['id']
+    return instanceId    
 
 def get_face_id(body_details, axis, location):
     bodies = body_details.json()['bodies']
@@ -28,8 +28,8 @@ def get_face_id(body_details, axis, location):
                 faceId = face['id']
     return faceId
 
-def get_centroid_offset(r1, r2):
+def get_centroid_offset(r1, r2, xOffset):
      A1 = math.pi * r1**2
      A2 = math.pi * r2**2
-     centroid_offset = -(2*r1 + A1/(A2 - A1)/100)
+     centroid_offset = -(A2 * xOffset) / (A2 - A1)
      return centroid_offset

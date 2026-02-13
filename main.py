@@ -11,7 +11,7 @@ def main():
         WVM = "w"
         DID, EID, WVMID = get_ids(part_studio_URL, WVM)
         
-        # Globals
+        # Parameters
         XOFFSET = 0.01
         R1 = 0.005
         R2 = 0.02
@@ -49,20 +49,20 @@ def main():
             add_part_to_assembly(DID, WVM, WVMID, assemEID, EID, partId)
             assembly_definition = get_assembly_definition(DID, WVM, WVMID, assemEID)
         
-            deterministicId = get_deterministic_id(assembly_definition, partId)
-            print(f"New assembly path ID: {deterministicId}")
+            instanceId = get_instance_id(assembly_definition, partId)
+            print(f"New assembly path ID: {instanceId}")
 
             # Get the body details of the new part then find the top face
             body_details = get_body_details(DID, WVM, WVMID, EID, partId)
-            faceId = get_face_id(body_details, 'y', 0.0)
-            print(f"New part face ID: {faceId}")
+            deterministicFaceId = get_face_id(body_details, 'y', 0.0)
+            print(f"New part face ID: {deterministicFaceId}")
 
             # Generate JSON for new mate connector
             if i == 1:
-                centroidOffset = get_centroid_offset(R1, R2)
+                centroidOffset = get_centroid_offset(R1, R2, XOFFSET)
             else:
                 centroidOffset = 0
-            mate_connector_json = get_mate_connector_json(deterministicId, faceId, centroidOffset)
+            mate_connector_json = get_mate_connector_json(instanceId, deterministicFaceId, centroidOffset)
 
             # Create new mate connector on part
             mc_response = add_feature_to_assembly(DID, WVM, WVMID, assemEID, mate_connector_json)
