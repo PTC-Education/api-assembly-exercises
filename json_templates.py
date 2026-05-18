@@ -1,4 +1,4 @@
-def get_sketch_json(radius, x, y, name):
+def get_sketch_json(r1, r2, xOffset, yOffset, name):
     return {
   "feature" : {
     "btType": "BTMSketch-151", 
@@ -21,23 +21,37 @@ def get_sketch_json(radius, x, y, name):
         "btType": "BTMSketchCurve-4",
         "geometry": {
           "btType": "BTCurveGeometryCircle-115",
-          "radius": radius,  
-          "xCenter": x,
-          "yCenter": y,  
+          "radius": r1,  
+          "xCenter": 0,
+          "yCenter": 0,  
           "xDir": 1,
           "yDir": 0, 
           "clockwise": False 
         },
-        "centerId": "circle-entity.center",
-        "entityId": "circle-entity"
-      }  
+        "centerId": "small-circle.center",
+        "entityId": "small-circle"
+      },
+      {
+        "btType": "BTMSketchCurve-4",
+        "geometry": {
+          "btType": "BTCurveGeometryCircle-115",
+          "radius": r2,  
+          "xCenter": xOffset,
+          "yCenter": yOffset,  
+          "xDir": 1,
+          "yDir": 0, 
+          "clockwise": False 
+        },
+        "centerId": "big-circle.center",
+        "entityId": "big-circle"
+      }    
     ],
     "constraints": [      
     ]
   }
 }
 
-def get_extrude_json(feature_id, depth):
+def get_extrude_json(feature_id, depth, region_index):
     return {
           "btType": "BTFeatureDefinitionCall-1406",
           "feature": {
@@ -61,8 +75,8 @@ def get_extrude_json(feature_id, depth):
                 "btType": "BTMParameterQueryList-148",
                 "queries": [
                   {
-                    "btType": "BTMIndividualSketchRegionQuery-140",
-                    "featureId": feature_id
+                    "btType": "BTMIndividualQuery-138",
+                    "queryString": f'query=qNthElement(qSketchRegion(makeId("{feature_id}"), false), {region_index});'
                   }
                 ],
                 "parameterId": "entities"
@@ -75,7 +89,7 @@ def get_extrude_json(feature_id, depth):
               },
               {
                 "btType": "BTMParameterQuantity-147",
-                "expression": str(depth) + " m",
+                "expression": f"{depth} m",
                 "parameterId": "depth"
               }
                 ],
@@ -84,7 +98,7 @@ def get_extrude_json(feature_id, depth):
           }
         }
 
-def get_mate_connector_json(instanceID, deterministicId):
+def get_mate_connector_json(instanceID, deterministicId, xOffset):
     return {
         "feature": {    
             "btType": "BTMMateConnector-66",
@@ -92,28 +106,38 @@ def get_mate_connector_json(instanceID, deterministicId):
             "name": "Mate connector 1",
             "parameters": [
                 {
-                "btType": "BTMParameterEnum-145",
-                "enumName": "Origin type",
-                "value": "ON_ENTITY",
-                "parameterId": "originType"
+                  "btType": "BTMParameterEnum-145",
+                  "enumName": "Origin type",
+                  "value": "ON_ENTITY",
+                  "parameterId": "originType"
                 },
                 {
-                "btType": "BTMParameterQueryWithOccurrenceList-67",
-                "queries": [
-                    {
-                    "btType": "BTMInferenceQueryWithOccurrence-1083",
-                    "inferenceType": "CENTROID",
-                    "path": [
-                        instanceID
-                    ],
-                    "deterministicIds": [
-                        deterministicId
-                    ]
-                    }
-                ],
-                "parameterId": "originQuery",
-                "parameterName": "",
-                "libraryRelationType": "NONE"
+                  "btType": "BTMParameterQueryWithOccurrenceList-67",
+                  "queries": [
+                      {
+                      "btType": "BTMInferenceQueryWithOccurrence-1083",
+                      "inferenceType": "CENTROID",
+                      "path": [
+                          instanceID
+                      ],
+                      "deterministicIds": [
+                          deterministicId
+                      ]
+                      }
+                  ],
+                  "parameterId": "originQuery",
+                  "parameterName": "",
+                  "libraryRelationType": "NONE"
+                },
+                {
+                    "btType": "BTMParameterBoolean-144",
+                    "value": True,
+                    "parameterId": "transform"
+                },
+                {
+                  "btType": "BTMParameterQuantity-147",
+                  "expression": f"{xOffset} m",
+                  "parameterId": "translationX"
                 }
             ],
             "isHidden": False,
