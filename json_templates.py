@@ -28,8 +28,8 @@ def get_sketch_json(r1, r2, xOffset, yOffset, name):
           "yDir": 0, 
           "clockwise": False 
         },
-        "centerId": "big-circle.center",
-        "entityId": "big-circle"
+        "centerId": "small-circle.center",
+        "entityId": "small-circle"
       },
       {
         "btType": "BTMSketchCurve-4",
@@ -42,8 +42,8 @@ def get_sketch_json(r1, r2, xOffset, yOffset, name):
           "yDir": 0, 
           "clockwise": False 
         },
-        "centerId": "small-circle.center",
-        "entityId": "small-circle"
+        "centerId": "big-circle.center",
+        "entityId": "big-circle"
       }    
     ],
     "constraints": [      

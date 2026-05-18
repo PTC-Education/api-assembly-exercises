@@ -2,7 +2,6 @@
 from helper_functions import *
 from json_templates import *
 from api_calls import *
-import json
 
 def main():
     try:
