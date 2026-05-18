@@ -35,7 +35,8 @@ def main():
         # Get parts list and partId for two most recent parts
         parts_response = get_parts_list(DID, WVM, WVMID, EID)
         recent_parts = parts_response.json()[-2:]
-        print(f"New part IDs: {recent_parts}")
+        for part in recent_parts:
+            print(f"New part ID: {part['partId']}")
 
         # Create new assembly
         assem_response = create_assembly(DID, WVM, WVMID, "My Assembly")
